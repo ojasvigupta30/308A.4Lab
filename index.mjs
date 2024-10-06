@@ -23,33 +23,34 @@ const API_KEY = "live_6icdkI24DAt2qqxh8PNx9ju6mRG9pTM1asEa8KFxkt15HCrODmPE6QomKW
  * This function should execute immediately.
  */
 
-console.log(`hello`);
+// console.log(`hello`);
+// let breeds;
 
 async function initialLoad() {
 
   // https://api.thecatapi.com/v1/images/search?api_key=YOUR_API_KEY
   const response = await fetch("https://api.thecatapi.com/v1/breeds", {
-    headers: {"x-api-key" : API_KEY }
+    headers: { "x-api-key": API_KEY }
   });
 
-  console.log(response.ok);
-  console.log(response.status);
+  // console.log(response.ok);
+  // console.log(response.status);
 
   let breeds = await response.json();
 
-  for(let i=0; i<breeds.length;i++){
+  for (let i = 0; i < breeds.length; i++) {
     let option = document.createElement(`option`);
     option.setAttribute(`value`, breeds[i].id);
-    // console.log(breeds[i].name);
+    // console.log(breeds[i]);
     option.textContent = breeds[i].name;
     breedSelect.appendChild(option);
-    console.log(option);
+    // console.log(option);
   }
 
   // console.log(`hell`);
   // // console.log(response);
-  console.log(breeds);
-  
+  // console.log(breeds);
+
 }
 
 initialLoad();
@@ -70,6 +71,59 @@ initialLoad();
  * - Each new selection should clear, re-populate, and restart the Carousel.
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
+
+breedSelect.addEventListener(`change`, async function addImageToCarouselFunction(eve) {
+
+  // console.log(eve.target.value);
+
+  Carousel.clear();
+  infoDump.innerHTML = ``;
+
+  let breedsId = eve.target.value;
+
+  let response = await fetch(`https://api.thecatapi.com/v1/images/search?breed_id=${breedsId}&limit=5&api_key=${API_KEY}`);
+
+  console.log(response.ok);
+  console.log(response.status);
+
+
+
+  let breedImgFacts = await response.json();
+
+  console.log(breedImgFacts);
+
+  console.log(Carousel.createCarouselItem);
+
+
+  for (let i = 0; i < breedImgFacts.length; i++) {
+    console.log(breedImgFacts[i]);
+
+    let imgSrc = breedImgFacts[i].url;
+    let imgAlt = breedImgFacts[i].breeds.name;
+    let imgId = breedImgFacts[i].id;
+
+    let newImgItem = Carousel.createCarouselItem(imgSrc, imgAlt, imgId);
+
+    Carousel.appendCarousel(newImgItem);
+    Carousel.start();
+
+
+  }
+
+  let breedInfo = document.createElement('div');
+  breedInfo.textContent = `Facts about ${breedImgFacts[0].breeds[0].name}: ${breedImgFacts[0].breeds[0].description}`;
+  infoDump.appendChild(breedInfo);
+
+
+}
+
+
+);
+
+
+
+
+
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
