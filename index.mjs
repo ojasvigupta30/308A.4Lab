@@ -157,59 +157,6 @@ async function initialLoad() {
 
 initialLoad();
 
-
-
-// breedSelect.addEventListener(`change`, async function addImageToCarouselFunction(eve) {
-
-//   // console.log(eve.target.value);
-
-//   Carousel.clear();
-//   infoDump.innerHTML = ``;
-
-//   let breedsId = eve.target.value;
-
-//   let response = await fetch(`https://api.thecatapi.com/v1/images/search?breed_id=${breedsId}&limit=5&api_key=${API_KEY}`);
-
-//   console.log(response.ok);
-//   console.log(response.status);
-
-
-
-//   let breedImgFacts = await response.json();
-
-//   console.log(breedImgFacts);
-
-//   console.log(Carousel.createCarouselItem);
-
-
-//   for (let i = 0; i < breedImgFacts.length; i++) {
-//     console.log(breedImgFacts[i]);
-
-//     let imgSrc = breedImgFacts[i].url;
-//     let imgAlt = breedImgFacts[i].breeds.name;
-//     let imgId = breedImgFacts[i].id;
-
-//     let newImgItem = Carousel.createCarouselItem(imgSrc, imgAlt, imgId);
-
-//     Carousel.appendCarousel(newImgItem);
-//     Carousel.start();
-
-
-//   }
-
-//   let breedInfo = document.createElement('div');
-//   breedInfo.textContent = `Facts about ${breedImgFacts[0].breeds[0].name}: ${breedImgFacts[0].breeds[0].description}`;
-//   infoDump.appendChild(breedInfo);
-
-
-// }
-
-
-// );
-
-
-
-
 breedSelect.addEventListener('change', async function addImageToCarouselFunction(eve) {
   Carousel.clear();
   infoDump.innerHTML = '';
