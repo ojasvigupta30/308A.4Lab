@@ -222,8 +222,6 @@ axiosInstance.interceptors.response.use(
 
 
 
-
-
 /**
  * 6. Next, we'll create a progress bar to indicate the request is in progress.
  * - The progressBar element has already been created for you.
@@ -240,11 +238,30 @@ axiosInstance.interceptors.response.use(
  *   with for future projects.
  */
 
+
+function updateProgress(progressEvent) {
+  let progress = (progressEvent.loaded * 100) / progressEvent.total;
+  progressBar.style.width = `${progress}%`;
+}
+
+axiosInstance.interceptors.request.use(request => {
+  progressBar.style.width = '0%';
+  request.onDownloadProgress = updateProgress;
+  return request;
+});
+
+
+
+
+
 /**
  * 7. As a final element of progress indication, add the following to your axios interceptors:
  * - In your request interceptor, set the body element's cursor style to "progress."
  * - In your response interceptor, remove the progress cursor style from the body element.
  */
+
+
+
 /**
  * 8. To practice posting data, we'll create a system to "favourite" certain images.
  * - The skeleton of this function has already been created for you.
