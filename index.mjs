@@ -141,6 +141,9 @@ const axiosInstance = axios.create({
   }
 });
 
+
+initialLoad();
+
 // Now replace your fetch calls with axios like below:
 
 async function initialLoad() {
@@ -155,9 +158,11 @@ async function initialLoad() {
   }
 }
 
-initialLoad();
 
-breedSelect.addEventListener('change', async function addImageToCarouselFunction(eve) {
+breedSelect.addEventListener('change', addImageToCarouselFunction);
+
+  
+  async function addImageToCarouselFunction(eve) {
   Carousel.clear();
   infoDump.innerHTML = '';
 
@@ -180,7 +185,7 @@ breedSelect.addEventListener('change', async function addImageToCarouselFunction
   let breedInfo = document.createElement('div');
   breedInfo.textContent = `Facts about ${breedImgFacts[0].breeds[0].name}: ${breedImgFacts[0].breeds[0].description}`;
   infoDump.appendChild(breedInfo);
-});
+}
 
 
 
@@ -191,6 +196,33 @@ breedSelect.addEventListener('change', async function addImageToCarouselFunction
  * - Add a console.log statement to indicate when requests begin.
  * - As an added challenge, try to do this on your own without referencing the lesson material.
  */
+
+axiosInstance.interceptors.request.use(request => {
+  request.metadata = request.metadata || {};
+  request.metadata.startTime = new Date().getTime();
+  return request;
+});
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+      response.config.metadata.endTime = new Date().getTime();
+      response.config.metadata.durationInMS = response.config.metadata.endTime - response.config.metadata.startTime;
+
+      console.log(`Request took ${response.config.metadata.durationInMS} milliseconds.`)
+      return response;
+  },
+  (error) => {
+      error.config.metadata.endTime = new Date().getTime();
+      error.config.metadata.durationInMS = error.config.metadata.endTime - error.config.metadata.startTime;
+
+      console.log(`Request took ${error.config.metadata.durationInMS} milliseconds.`)
+      throw error;
+});
+
+
+
+
+
 
 /**
  * 6. Next, we'll create a progress bar to indicate the request is in progress.
