@@ -305,6 +305,29 @@ export async function favourite(imgId) {
  *    repeat yourself in this section.
  */
 
+
+async function getFavourites() {
+  Carousel.clear();
+  infoDump.innerHTML = '';
+
+  let response = await axiosInstance.get('/favourites');
+  let favourites = response.data;
+
+  for (let i = 0; i < favourites.length; i++) {
+    let imgSrc = favourites[i].image.url;
+    let imgAlt = 'Favourite Image';
+    let imgId = favourites[i].image_id;
+
+    let newImgItem = Carousel.createCarouselItem(imgSrc, imgAlt, imgId);
+    Carousel.appendCarousel(newImgItem);
+    Carousel.start();
+  }
+}
+
+getFavouritesBtn.addEventListener('click', getFavourites);
+
+
+
 /**
  * 10. Test your site, thoroughly!
  * - What happens when you try to load the Malayan breed?
