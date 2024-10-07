@@ -2,16 +2,16 @@ import * as Carousel from "./Carousel.mjs";
 // import axios from "axios";
 
 // The breed selection input element.
-const breedSelect = document.getElementById("breedSelect");
+let breedSelect = document.getElementById("breedSelect");
 // The information section div element.
-const infoDump = document.getElementById("infoDump");
+let infoDump = document.getElementById("infoDump");
 // The progress bar div element.
-const progressBar = document.getElementById("progressBar");
+let progressBar = document.getElementById("progressBar");
 // The get favourites button element.
-const getFavouritesBtn = document.getElementById("getFavouritesBtn");
+let getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "live_6icdkI24DAt2qqxh8PNx9ju6mRG9pTM1asEa8KFxkt15HCrODmPE6QomKWLvu8AG";
+let API_KEY = "live_6icdkI24DAt2qqxh8PNx9ju6mRG9pTM1asEa8KFxkt15HCrODmPE6QomKWLvu8AG";
 
 
 /**
@@ -29,7 +29,7 @@ const API_KEY = "live_6icdkI24DAt2qqxh8PNx9ju6mRG9pTM1asEa8KFxkt15HCrODmPE6QomKW
 // async function initialLoad() {
 
 //   // https://api.thecatapi.com/v1/images/search?api_key=YOUR_API_KEY
-//   const response = await fetch("https://api.thecatapi.com/v1/breeds", {
+//   let response = await fetch("https://api.thecatapi.com/v1/breeds", {
 //     headers: { "x-api-key": API_KEY }
 //   });
 
@@ -134,7 +134,7 @@ const API_KEY = "live_6icdkI24DAt2qqxh8PNx9ju6mRG9pTM1asEa8KFxkt15HCrODmPE6QomKW
  *   send it manually with all of your requests! You can also set a default base URL!
  */
 
-const axiosInstance = axios.create({
+let axiosInstance = axios.create({
   baseURL: 'https://api.thecatapi.com/v1',
   headers: {
     'x-api-key': API_KEY
@@ -147,7 +147,7 @@ initialLoad();
 // Now replace your fetch calls with axios like below:
 
 async function initialLoad() {
-  const response = await axiosInstance.get('/breeds');
+  let response = await axiosInstance.get('/breeds');
   let breeds = response.data;
 
   for (let i = 0; i < breeds.length; i++) {
@@ -275,7 +275,25 @@ axiosInstance.interceptors.request.use(request => {
  */
 export async function favourite(imgId) {
   // your code here
-}
+    try {
+      // Check if this image is already favourited
+      let favouritesResponse = await axiosInstance.get('/favourites');
+      let favouriteExists = favouritesResponse.data.find(fav => fav.image_id === imgId);
+  
+      if (favouriteExists) {
+        // If favourited, unfavorite the image
+        await axiosInstance.delete(`/favourites/${favouriteExists.id}`);
+        console.log(`Image ${imgId} removed from favourites.`);
+      } else {
+        // Otherwise, favourite the image
+        await axiosInstance.post('/favourites', { image_id: imgId });
+        console.log(`Image ${imgId} added to favourites.`);
+      }
+    } catch (error) {
+      console.error('Error toggling favourite:', error);
+    }
+  }
+  
 
 /**
  * 9. Test your favourite() function by creating a getFavourites() function.
