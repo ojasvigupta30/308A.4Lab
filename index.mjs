@@ -24,36 +24,36 @@ const API_KEY = "live_6icdkI24DAt2qqxh8PNx9ju6mRG9pTM1asEa8KFxkt15HCrODmPE6QomKW
  */
 
 // console.log(`hello`);
-// let breeds;
 
-async function initialLoad() {
 
-  // https://api.thecatapi.com/v1/images/search?api_key=YOUR_API_KEY
-  const response = await fetch("https://api.thecatapi.com/v1/breeds", {
-    headers: { "x-api-key": API_KEY }
-  });
+// async function initialLoad() {
 
-  // console.log(response.ok);
-  // console.log(response.status);
+//   // https://api.thecatapi.com/v1/images/search?api_key=YOUR_API_KEY
+//   const response = await fetch("https://api.thecatapi.com/v1/breeds", {
+//     headers: { "x-api-key": API_KEY }
+//   });
 
-  let breeds = await response.json();
+//   // console.log(response.ok);
+//   // console.log(response.status);
 
-  for (let i = 0; i < breeds.length; i++) {
-    let option = document.createElement(`option`);
-    option.setAttribute(`value`, breeds[i].id);
-    // console.log(breeds[i]);
-    option.textContent = breeds[i].name;
-    breedSelect.appendChild(option);
-    // console.log(option);
-  }
+//   let breeds = await response.json();
 
-  // console.log(`hell`);
-  // // console.log(response);
-  // console.log(breeds);
+//   for (let i = 0; i < breeds.length; i++) {
+//     let option = document.createElement(`option`);
+//     option.setAttribute(`value`, breeds[i].id);
+//     // console.log(breeds[i]);
+//     option.textContent = breeds[i].name;
+//     breedSelect.appendChild(option);
+//     // console.log(option);
+//   }
 
-}
+//   // console.log(`hell`);
+//   // // console.log(response);
+//   // console.log(breeds);
 
-initialLoad();
+// }
+
+// initialLoad();
 
 
 
@@ -72,57 +72,53 @@ initialLoad();
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
 
-breedSelect.addEventListener(`change`, async function addImageToCarouselFunction(eve) {
+// breedSelect.addEventListener(`change`, async function addImageToCarouselFunction(eve) {
 
-  // console.log(eve.target.value);
+//   // console.log(eve.target.value);
 
-  Carousel.clear();
-  infoDump.innerHTML = ``;
+//   Carousel.clear();
+//   infoDump.innerHTML = ``;
 
-  let breedsId = eve.target.value;
+//   let breedsId = eve.target.value;
 
-  let response = await fetch(`https://api.thecatapi.com/v1/images/search?breed_id=${breedsId}&limit=5&api_key=${API_KEY}`);
+//   let response = await fetch(`https://api.thecatapi.com/v1/images/search?breed_id=${breedsId}&limit=5&api_key=${API_KEY}`);
 
-  console.log(response.ok);
-  console.log(response.status);
-
-
-
-  let breedImgFacts = await response.json();
-
-  console.log(breedImgFacts);
-
-  console.log(Carousel.createCarouselItem);
-
-
-  for (let i = 0; i < breedImgFacts.length; i++) {
-    console.log(breedImgFacts[i]);
-
-    let imgSrc = breedImgFacts[i].url;
-    let imgAlt = breedImgFacts[i].breeds.name;
-    let imgId = breedImgFacts[i].id;
-
-    let newImgItem = Carousel.createCarouselItem(imgSrc, imgAlt, imgId);
-
-    Carousel.appendCarousel(newImgItem);
-    Carousel.start();
-
-
-  }
-
-  let breedInfo = document.createElement('div');
-  breedInfo.textContent = `Facts about ${breedImgFacts[0].breeds[0].name}: ${breedImgFacts[0].breeds[0].description}`;
-  infoDump.appendChild(breedInfo);
-
-
-}
-
-
-);
+//   console.log(response.ok);
+//   console.log(response.status);
 
 
 
+//   let breedImgFacts = await response.json();
 
+//   console.log(breedImgFacts);
+
+//   console.log(Carousel.createCarouselItem);
+
+
+//   for (let i = 0; i < breedImgFacts.length; i++) {
+//     console.log(breedImgFacts[i]);
+
+//     let imgSrc = breedImgFacts[i].url;
+//     let imgAlt = breedImgFacts[i].breeds.name;
+//     let imgId = breedImgFacts[i].id;
+
+//     let newImgItem = Carousel.createCarouselItem(imgSrc, imgAlt, imgId);
+
+//     Carousel.appendCarousel(newImgItem);
+//     Carousel.start();
+
+
+//   }
+
+//   let breedInfo = document.createElement('div');
+//   breedInfo.textContent = `Facts about ${breedImgFacts[0].breeds[0].name}: ${breedImgFacts[0].breeds[0].description}`;
+//   infoDump.appendChild(breedInfo);
+
+
+// }
+
+
+// );
 
 
 /**
@@ -137,6 +133,111 @@ breedSelect.addEventListener(`change`, async function addImageToCarouselFunction
  *   by setting a default header with your API key so that you do not have to
  *   send it manually with all of your requests! You can also set a default base URL!
  */
+
+const axiosInstance = axios.create({
+  baseURL: 'https://api.thecatapi.com/v1',
+  headers: {
+    'x-api-key': API_KEY
+  }
+});
+
+// Now replace your fetch calls with axios like below:
+
+async function initialLoad() {
+  const response = await axiosInstance.get('/breeds');
+  let breeds = response.data;
+
+  for (let i = 0; i < breeds.length; i++) {
+    let option = document.createElement('option');
+    option.setAttribute('value', breeds[i].id);
+    option.textContent = breeds[i].name;
+    breedSelect.appendChild(option);
+  }
+}
+
+initialLoad();
+
+
+
+// breedSelect.addEventListener(`change`, async function addImageToCarouselFunction(eve) {
+
+//   // console.log(eve.target.value);
+
+//   Carousel.clear();
+//   infoDump.innerHTML = ``;
+
+//   let breedsId = eve.target.value;
+
+//   let response = await fetch(`https://api.thecatapi.com/v1/images/search?breed_id=${breedsId}&limit=5&api_key=${API_KEY}`);
+
+//   console.log(response.ok);
+//   console.log(response.status);
+
+
+
+//   let breedImgFacts = await response.json();
+
+//   console.log(breedImgFacts);
+
+//   console.log(Carousel.createCarouselItem);
+
+
+//   for (let i = 0; i < breedImgFacts.length; i++) {
+//     console.log(breedImgFacts[i]);
+
+//     let imgSrc = breedImgFacts[i].url;
+//     let imgAlt = breedImgFacts[i].breeds.name;
+//     let imgId = breedImgFacts[i].id;
+
+//     let newImgItem = Carousel.createCarouselItem(imgSrc, imgAlt, imgId);
+
+//     Carousel.appendCarousel(newImgItem);
+//     Carousel.start();
+
+
+//   }
+
+//   let breedInfo = document.createElement('div');
+//   breedInfo.textContent = `Facts about ${breedImgFacts[0].breeds[0].name}: ${breedImgFacts[0].breeds[0].description}`;
+//   infoDump.appendChild(breedInfo);
+
+
+// }
+
+
+// );
+
+
+
+
+breedSelect.addEventListener('change', async function addImageToCarouselFunction(eve) {
+  Carousel.clear();
+  infoDump.innerHTML = '';
+
+  let breedsId = eve.target.value;
+  let response = await axiosInstance.get(`/images/search?breed_id=${breedsId}&limit=5`);
+
+  let breedImgFacts = response.data;
+
+
+  for (let i = 0; i < breedImgFacts.length; i++) {
+    let imgSrc = breedImgFacts[i].url;
+    let imgAlt = breedImgFacts[i].breeds.name;
+    let imgId = breedImgFacts[i].id;
+
+    let newImgItem = Carousel.createCarouselItem(imgSrc, imgAlt, imgId);
+    Carousel.appendCarousel(newImgItem);
+    Carousel.start();
+  }
+
+  let breedInfo = document.createElement('div');
+  breedInfo.textContent = `Facts about ${breedImgFacts[0].breeds[0].name}: ${breedImgFacts[0].breeds[0].description}`;
+  infoDump.appendChild(breedInfo);
+});
+
+
+
+
 /**
  * 5. Add axios interceptors to log the time between request and response to the console.
  * - Hint: you already have access to code that does this!
