@@ -150,6 +150,8 @@ async function initialLoad() {
   let response = await axiosInstance.get('/breeds');
   let breeds = response.data;
 
+  console.log(breeds);
+
   for (let i = 0; i < breeds.length; i++) {
     let option = document.createElement('option');
     option.setAttribute('value', breeds[i].id);
@@ -166,10 +168,20 @@ breedSelect.addEventListener('change', addImageToCarouselFunction);
   Carousel.clear();
   infoDump.innerHTML = '';
 
+
   let breedsId = eve.target.value;
   let response = await axiosInstance.get(`/images/search?breed_id=${breedsId}&limit=5`);
 
   let breedImgFacts = response.data;
+
+
+   if (!breedImgFacts || breedImgFacts.length === 0) {
+    let noDataMsg = document.createElement('p');
+    noDataMsg.textContent = 'No images available for this breed.';
+    infoDump.appendChild(noDataMsg);
+    return;
+
+  }
 
 
   for (let i = 0; i < breedImgFacts.length; i++) {
@@ -335,3 +347,5 @@ getFavouritesBtn.addEventListener('click', getFavourites);
  * - Test other breeds as well. Not every breed has the same data available, so
  *   your code should account for this.
  */
+
+
