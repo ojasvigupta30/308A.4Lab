@@ -152,6 +152,7 @@ async function initialLoad() {
 
   console.log(breeds);
 
+
   for (let i = 0; i < breeds.length; i++) {
     let option = document.createElement('option');
     option.setAttribute('value', breeds[i].id);
